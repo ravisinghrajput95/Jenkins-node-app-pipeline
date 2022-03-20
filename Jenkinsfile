@@ -49,7 +49,7 @@ pipeline{
  
                        npm run test:unit
                        
-                       slackUploadFile filePath: '$WORKSPACE/server/mochawesome-report/mochawesome.html', initialComment: 'Unit test results for the current build | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER}'
+                       slackUploadFile filePath: 'mochawesome-report/mochawesome.html', initialComment: 'Unit test results for the current build | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER}'
                  
                        """
                     }
