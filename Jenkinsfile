@@ -39,8 +39,6 @@ pipeline{
         stage('Unit Tests'){
             steps{
                 script{
-                 DATE_TAG = java.time.LocalDate.now()
-                 DATETIME_TAG = java.time.LocalDateTime.now()
                  def textMessage
                  def inError
                   try{
@@ -52,13 +50,13 @@ pipeline{
                        slackUploadFile filePath: 'mochawesome.html', initialComment: 'Unit test results for the current Build'
                     }
                        
-                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed unit tests"
+                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Unit tests"
                     inError = false
                 }
 
                 catch(e){
                     echo "$e"
-                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on unit tests"
+                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Unit tests"
                     inError = true
                 }
 
@@ -70,6 +68,41 @@ pipeline{
                         error("Failed integration tests")
                         slackSend color: "danger", message: "Status: Unit tests are failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
 
+                    }
+                }
+            }
+        }
+        stage('Integration Tests'){
+            steps{
+                script{
+                    def textMessage
+                    def inError
+                    try{
+                        dir('server'){
+                            sh 'rm -rf mochawesome-report'
+                            sh 'npm run test:integration'
+                        }
+
+                        dir('server/mochawesome-report'){
+                            slackUploadFile filePath: 'mochawesome.html', initialComment: 'Integration test results for the current Build'
+
+                        }
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Integration tests"
+                        inError = false
+                    }
+                    catch(e){
+                        echo "$e"
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Integration tests"
+                        inError = true
+
+                    }
+                    finally{
+                        slackSend color: "good", message: "Status: Application is good with the Integration tests  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                    if(inError){
+                        error("Failed integration tests")
+                        slackSend color: "danger", message: "Status: Unit tests are failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+
+                    }
                     }
                 }
             }
