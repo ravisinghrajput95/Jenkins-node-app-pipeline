@@ -45,15 +45,13 @@ pipeline{
                  def inError
                   try{
                     dir('server'){
-                    sh """ 
- 
-                       npm run test:unit
-                       
-                       slackUploadFile filePath: 'mochawesome-report/mochawesome.html', initialComment: 'Unit test results for the current build | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER}'
-                 
-                       """
+                      sh 'npm run test:unit' 
+                      
                     }
-
+                    dir('mochawesome-report'){
+                       slackUploadFile filePath: '$WORKSPACE/server/mochawesome-report/mochawesome.html', initialComment: 'Unit test results for the current build | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER}'
+                    }
+                       
                     textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed unit tests"
                     inError = false
                 }
