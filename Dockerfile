@@ -1,6 +1,6 @@
 FROM node:alpine
 WORKDIR /usr/app
-COPY /server/* .
+COPY /server/* ./
 COPY package-lock.json . 
 RUN npm install
 EXPOSE 8000
