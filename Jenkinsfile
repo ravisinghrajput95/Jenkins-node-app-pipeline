@@ -109,7 +109,6 @@ pipeline{
             }
         }
     }
-        
         stage('Docker Build'){
             steps{
                 script{
@@ -117,27 +116,30 @@ pipeline{
                     def inError
                     try{
                         sh 'docker build -t rajputmarch2020/nodeapp:${GIT_COMMIT_HASH} .'
-                    }
-                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Docker Build"
-                    inError = false
-                }
-                catch(e){
-                    echo "$e"
-                    textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Docker image build"
-                    inError = true
-                }
-                finally{
-                    slackSend color: "good", message: "Status: Docker image build succeed  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
-                    if(inError){
-                    error("Failed Docker Build")
-                    slackSend color: "danger", message: "Status: Docker image build failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
 
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Integration tests"
+                        inError = false
+                    }
+                    catch(e){
+                        echo "$e"
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Docker image build"
+                         inError = true
+                    }
+                    finally{
+                        slackSend color: "good", message: "Status: Docker image build succeed  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                        if(inError){
+                        error("Failed integration tests")
+                        slackSend color: "danger", message: "Status: Docker image build failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                    }
                 }
+
             }
         }
-    }
+    }    
+        
+        
 }
-    
+
 post{
     success{
         echo "Pipeline executed successfully"
