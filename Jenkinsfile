@@ -48,7 +48,7 @@ pipeline{
                       sh 'npm run test:unit' 
                       
                     }
-                    dir('mochawesome-report'){
+                    dir('server/mochawesome-report'){
                        slackUploadFile filePath: 'mochawesome.html', initialComment: 'Unit test results for the current Build'
                     }
                        
