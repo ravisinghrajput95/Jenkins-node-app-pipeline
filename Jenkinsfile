@@ -72,6 +72,8 @@ pipeline{
                 }
             }
         }
+    }
+        
         stage('Integration Tests'){
             steps{
                 script{
@@ -103,12 +105,12 @@ pipeline{
                         slackSend color: "danger", message: "Status: Unit tests are failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
 
                     }
-                    }
                 }
             }
         }
     }
 }
+
 post{
     success{
         echo "Pipeline executed successfully"
