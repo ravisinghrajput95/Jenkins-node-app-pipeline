@@ -110,7 +110,6 @@ pipeline{
         }
     }
         
-}
         stage('Docker Build'){
             steps{
                 script{
@@ -121,7 +120,7 @@ pipeline{
                     }
                     textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Docker Build"
                     inError = false
-
+                
                 catch(e){
                     echo "$e"
                     textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Docker image build"
@@ -138,6 +137,7 @@ pipeline{
         }
     }
 }
+    }
     
 post{
     success{
