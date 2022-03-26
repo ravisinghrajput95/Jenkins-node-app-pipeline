@@ -142,7 +142,7 @@ pipeline{
                 echo "Scanning image with Trivy"
                 script{
                     try{
-                        sh 'trivy image --no-progress --exit-code 1 --severity CRITICAL rajputmarch2020/nodeapp:${GIT_COMMIT_HASH}'
+                        sh 'trivy image --no-progress  --severity CRITICAL rajputmarch2020/nodeapp:${GIT_COMMIT_HASH}'
                         textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Trivy scan"
                         inError = false
                     }
