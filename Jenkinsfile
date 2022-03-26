@@ -160,6 +160,7 @@ pipeline{
                 }
             }
         }
+    }
 
         stage('Docker push'){
             steps{
@@ -172,7 +173,7 @@ pipeline{
     }    
         
         
-}
+
 
 post{
     success{
