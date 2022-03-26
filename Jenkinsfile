@@ -135,6 +135,7 @@ pipeline{
 
             }
         }
+    }
 
         stage('Image scan'){
             steps{
@@ -196,5 +197,4 @@ post{
 }
 
     }
-}
 }
