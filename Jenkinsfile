@@ -135,6 +135,31 @@ pipeline{
 
             }
         }
+
+        stage('Image scan'){
+            steps{
+                echo "Scanning image with Trivy"
+                script{
+                    try{
+                        sh 'trivy rajputmarch2020/nodeapp:${GIT_COMMIT_HASH} .'
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has passed Trivy scan"
+                        inError = false
+                    }
+                    catch(e){
+                        echo "$e"
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Trivy Scan"
+                        inError = true
+                    }
+                    finally{
+                        slackSend color: "good", message: "Status: Trivy Image scan is successfull  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                        if(inError){
+                        error("Failed integration tests")
+                        slackSend color: "danger", message: "Status: Trivy Image scan failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                    }
+                }
+            }
+        }
+    
     }    
         
         
@@ -171,4 +196,5 @@ post{
 }
 
     }
+}
 }
