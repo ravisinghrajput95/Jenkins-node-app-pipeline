@@ -108,7 +108,7 @@ pipeline{
                 }
             }
         }
-    }
+    }   
         stage('Docker Build'){
             steps{
                 script{
@@ -160,7 +160,15 @@ pipeline{
                 }
             }
         }
-    
+
+        stage('Docker push'){
+            steps{
+                withCredentials([string(credentialsId: 'dockerhub', variable: 'password')]) {
+                sh 'docker login -u rajputmarch2020 -p ${password} '
+                }
+                sh 'docker push rajputmarch2020/nodeapp:${GIT_COMMIT_HASH}'
+            }
+        } 
     }    
         
         
