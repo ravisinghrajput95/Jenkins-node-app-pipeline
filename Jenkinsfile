@@ -176,9 +176,9 @@ pipeline{
             steps{
                 script{
                     try{
-                        dir('Helm charts'){
+                        dir('Helm charts/'){
                             withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']){
-                                sh "helm datree test templates/*"
+                                sh "helm datree test charts/"
                             }
                         }
                     }
@@ -192,7 +192,7 @@ pipeline{
                     finally{
                         slackSend color: "good", message: "Status: Datree config checks for Kubernetes configs is successfull  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
                         if(inError){
-                        error("Failed integration tests")
+                        error("Datree config check is failed")
                         slackSend color: "danger", message: "Status: Datree config checks for Kubernetes configs is failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
 
                     }
