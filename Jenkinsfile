@@ -5,7 +5,6 @@ def getVersion(){
 
 pipeline{
     agent any
-
     environment{
         GIT_COMMIT_HASH = getVersion()
     }
@@ -172,7 +171,7 @@ pipeline{
             }
         }
 
-/*         stage('Validate Helm charts using Datree'){
+        stage('Validate Helm charts using Datree'){
             steps{
                 script{
                     try{
@@ -201,8 +200,8 @@ pipeline{
             }
         }
 
-    } */
-        stage('manual approval'){
+    } 
+        stage('Manual approval'){
             steps{
                 script{
                     timeout(10) {
@@ -220,14 +219,13 @@ pipeline{
                         dir('Helm/') {
                           sh 'helm upgrade --install --set image.repository="rajputmarch2020/nodeapp" --set image.tag="${GIT_COMMIT_HASH}" nodeapplication charts/ ' 
                         }
-                        slackSend color: "good", message: "Status: Application deployed successfully to AWS EKS cluster  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                        slackSend color: "good", message: "Status: Application deployed successfully to AWS EKS cluster | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
                     }
                }
             }
         }
     }    
-        
-    
+
 post{
     success{
         echo "Pipeline executed successfully"
@@ -257,7 +255,6 @@ post{
                     notFailBuild: true,
                     patterns: [[pattern: '.gitignore', type: 'INCLUDE'],
                                [pattern: '.propsfile', type: 'EXCLUDE']])
-}
-
+       }
     }
 }
