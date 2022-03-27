@@ -168,6 +168,7 @@ pipeline{
                 sh 'docker login -u rajputmarch2020 -p ${password} '
                 }
                 sh 'docker push rajputmarch2020/nodeapp:${GIT_COMMIT_HASH}'
+                slackSend color: "good", message: "Status: Image pushed to Docker Hub  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
             }
         }
 
@@ -177,7 +178,7 @@ pipeline{
                     try{
                         dir('Helm charts'){
                             withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']){
-                                sh "datree test templates/*"
+                                sh "helm datree test templates/*"
                             }
                         }
                     }
