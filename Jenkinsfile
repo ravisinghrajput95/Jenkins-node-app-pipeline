@@ -169,7 +169,19 @@ pipeline{
                 }
                 sh 'docker push rajputmarch2020/nodeapp:${GIT_COMMIT_HASH}'
             }
-        } 
+        }
+
+        stage('Validate Helm charts using Datree'){
+            steps{
+                script{
+                   dir('Helm charts') {
+                        withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']) {
+                              sh 'helm datree test '
+                        }
+                    }
+                }
+            }
+        }
     }    
         
     
