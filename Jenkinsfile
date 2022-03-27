@@ -177,7 +177,7 @@ pipeline{
                     try{
                         dir('Helm charts'){
                             withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']){
-                                sh 'helm datree test *.yaml'
+                                sh 'datree test *.yaml'
                             }
                         }
                     }
