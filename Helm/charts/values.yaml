@@ -15,6 +15,6 @@ nameOverride: ""
 fullnameOverride: ""
 
 service:
-  type: LoadBalancer
+  type: NodePort
   port: 8000
 
