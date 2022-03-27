@@ -174,14 +174,33 @@ pipeline{
         stage('Validate Helm charts using Datree'){
             steps{
                 script{
-                   dir('Helm charts') {
-                        withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']) {
-                              sh 'helm datree test '
+                    try{
+                        dir('Helm charts'){
+                            withEnv(['DATREE_TOKEN=ao1RpL3G3LMRL6eucy37hv']){
+                                sh 'helm datree test *.yaml'
+                            }
                         }
                     }
+                    catch(e){
+                        echo "$e"
+                        textMessage = "Commit hash: $GIT_COMMIT_HASH -- Has failed on Datree Kubernetes config checks"
+                        inError = true
+
+                    }
+
+                    finally{
+                        slackSend color: "good", message: "Status: Datree config checks for Kubernetes configs is successfull  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+                        if(inError){
+                        error("Failed integration tests")
+                        slackSend color: "danger", message: "Status: Datree config checks for Kubernetes configs is failed | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
+
+                    }
                 }
+
             }
         }
+
+    }
     }    
         
     
