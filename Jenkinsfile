@@ -217,9 +217,10 @@ pipeline{
             steps {
                script{
                    withCredentials([kubeconfigFile(credentialsId: 'kubernetes-config', variable: 'KUBECONFIG')]) {
-                        dir('kubernetes/') {
-                          sh 'helm upgrade --install --set image.repository="34.125.214.226:8083/springapp" --set image.tag="${VERSION}" myjavaapp myapp/ ' 
+                        dir('Helm/') {
+                          sh 'helm upgrade --install --set image.repository="rajputmarch2020/nodeapp" --set image.tag="${GIT_COMMIT_HASH}" nodeapplication charts/ ' 
                         }
+                        slackSend color: "good", message: "Status: Application deployed successfully to AWS EKS cluster  | Job: ${env.JOB_NAME} | Build number ${env.BUILD_NUMBER} "
                     }
                }
             }
